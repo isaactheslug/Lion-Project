@@ -1,0 +1,117 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Lion Who Asked Why?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-amber-50 font-serif">
+    <!-- Introduction Section -->
+    <section id="intro" class="min-h-screen flex items-center justify-center bg-amber-100">
+        <div class="container mx-auto text-center px-4">
+            <h2 class="text-3xl font-bold mb-4">The Lion Who Asked Why?</h2>
+            <p class="text-lg max-w-2xl mx-auto">A tale of courage and curiosity. Join Jorge, a young lion, as he seeks the truth behind the mysterious Elder above Elders.</p>
+        </div>
+    </section>
+
+    <!-- Parable Section -->
+    <section id="parable" class="min-h-screen flex items-center justify-center bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-8">The Parable</h2>
+            <div class="max-w-3xl mx-auto text-lg space-y-6">
+                <p>In the heart of a deep jungle, a lion pride thrived under the ever-present guidance of a mysterious voice known only as the Elder above Elders. Revered and unquestionable, the Elder spoke from the shadows beneath trees and shrubs, issuing commands that shaped every aspect of the pride’s life. The lions obeyed without hesitation, their loyalty fierce as their roars.</p>
+                <p>The Elder often gave good advice, yet every so often: the Elder gave strange commands.<br>“Go eat the grass,” it once decreed.</p>
+                <p>Though puzzled, the lions obeyed, grazing on bitter blades that filled their bellies with nothing but irritation and doubt. Still, not a single lion dared to question. Not even the oldest of their pride.</p>
+                <p>None, that is, except for Jorge, a young and small lion with restless eyes and a passion for understanding. The leaves could not fill his hunger, yet their presence only blazened Jorge’s appetite for knowledge.</p>
+                <p>Driven by unease, Jorge left the pride and set off alone across the desert. Through bright burning days and sweet, sultry starlight nights, he followed the whispers of the Elder above Elder’s voice to a place forgotten by most. A cave at the edge of the desert, where light nor animal could be seen for miles.</p>
+                <p>Inside, the air smelled of mushrooms and rot. The walls teemed with decay. At the center, Jorge unearthed the truth:</p>
+                <p>A massive, glistening worm, coiled among the bones of long-dead lions and animals of the desert. Not even light would bounce of its sinewy length.<br>“I am the Elder above Elders,” it said, in the exact same voice that ruled the pride.<br>“I know what was, and thus I know what must be.”</p>
+                <p>Yet, Jorge watched as the worm fed: not on wisdom, but on corpses. He realized that its so-called “knowledge” came from the decomposed memories of the dead, digested and distorted into commands. The Elder above Elders was no oracle, no god…. Just a mouth that echoes the past without any understanding of the present.</p>
+                <p>Jorge returned to the pride, his heart heavy with truth. He told them what he had seen. Many roared in denial, clinging to the comfort of obedience and tradition.</p>
+                <p>But others listened.<br>One by one, the pride began to remember how they got their name, and learned to foster, and listen to, the courageous voice within their own blazing hearts instead.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Music Section -->
+    <section id="music" class="min-h-screen flex items-center justify-center bg-amber-100">
+        <div class="container mx-auto text-center px-4">
+            <h2 class="text-3xl font-bold mb-6">Music to Inspire</h2>
+            <p class="text-lg max-w-2xl mx-auto mb-6">Enjoy these original compositions, crafted to echo Jorge’s journey of discovery.</p>
+            <div class="max-w-2xl mx-auto space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Track 1: Pride Parade (Intro)</h3>
+                    <iframe id="score-iframe" width="100%" height="394" src="https://musescore.com/user/74751517/scores/25733395/embed" frameborder="0" allowfullscreen allow="autoplay; fullscreen"></iframe>
+                    <p class="mt-2 text-sm text-gray-600">Composed by isaacw8, this piece captures the spirit of the pride’s unity.</p>
+                    <span class="text-sm text-gray-600">Source: <a href="https://musescore.com/user/74751517/scores/25733395/s/oJEQQB" target="_blank" class="text-amber-800 hover:underline">Pride Parade (intro) – isaacw8</a></span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Track 2: Lion Intro</h3>
+                    <iframe id="score-iframe" width="100%" height="394" src="https://musescore.com/user/74751517/scores/25733554/embed" frameborder="0" allowfullscreen allow="autoplay; fullscreen"></iframe>
+                    <p class="mt-2 text-sm text-gray-600">Composed by isaacw8, this track sets the tone for Jorge’s quest through the jungle.</p>
+                    <span class="text-sm text-gray-600">Source: <a href="https://musescore.com/user/74751517/scores/25733554/s/E0-hNH" target="_blank" class="text-amber-800 hover:underline">Lion intro – isaacw8</a></span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Track 3: Lion Intro v2</h3>
+                    <iframe id="score-iframe" width="100%" height="394" src="https://musescore.com/user/74751517/scores/25714102/embed" frameborder="0" allowfullscreen allow="autoplay; fullscreen"></iframe>
+                    <p class="mt-2 text-sm text-gray-600">Composed by isaacw8, this variation captures the moment of Jorge’s revelation.</p>
+                    <span class="text-sm text-gray-600">Source: <a href="https://musescore.com/user/74751517/scores/25714102/s/Mgwn4B" target="_blank" class="text-amber-800 hover:underline">Lion intro v2 – isaacw8</a></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="min-h-screen flex items-center justify-center bg-white">
+        <div class="container mx-auto text-center px-4">
+            <h2 class="text-3xl font-bold mb-4">Share Your Thoughts</h2>
+            <p class="text-lg max-w-2xl mx-auto">What did you think of the parable? Reach out via email at <a href="mailto:example@email.com" class="text-amber-800 hover:underline">example@email.com</a>.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-amber-800 text-white text-center p-4">
+        <p>© 2025 The Lion Who Asked Why? All rights reserved.</p>
+    </footer>
+</body>
+</html>
